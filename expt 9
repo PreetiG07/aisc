@@ -1,0 +1,22 @@
+# Triangular Membership Function
+def triangular_mf(x, a, b, c):
+if x &lt;= a or x &gt;= c:
+return 0.0
+elif a &lt; x &lt;= b:
+return (x - a) / (b - a)
+else:
+return (c - x) / (c - b)
+
+# Triangular fuzzy set parameters
+
+a = 20
+b = 30
+c = 40
+# Take temperature from user
+temperature = float(input(&quot;Enter Temperature Value: &quot;))
+# Calculate membership value
+membership_value = triangular_mf(temperature, a, b, c)
+# Display result
+print(&quot;\n--- Fuzzy Membership Result ---&quot;)
+print(&quot;Temperature:&quot;, temperature)
+print(&quot;Membership Value:&quot;, round(membership_value, 2))
