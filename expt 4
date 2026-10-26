@@ -1,0 +1,30 @@
+import math
+def alphabeta(depth, node, maximizing, values, alpha, beta):
+# Base Case: Reached Leaf Depth
+if depth == 3:
+return values[node]
+if maximizing:
+best = -math.inf
+for i in range(2):
+value = alphabeta(depth + 1, node * 2 + i, False, values, alpha, beta)
+best = max(best, value)
+alpha = max(alpha, best)
+# Pruning Break Condition
+if beta &lt;= alpha:
+break
+return best
+else:
+best = math.inf
+for i in range(2):
+value = alphabeta(depth + 1, node * 2 + i, True, values, alpha, beta)
+best = min(best, value)
+beta = min(beta, best)
+# Pruning Break Condition
+if beta &lt;= alpha:
+break
+return best
+# Leaf Values mapped representing depth-3 binary state spaces
+values = [3, 5, 6, 9, 1, 2, 0, -1]
+
+result = alphabeta(0, 0, True, values, -math.inf, math.inf)
+print(&quot;Optimal Value :&quot;, result)
