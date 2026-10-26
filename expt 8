@@ -1,0 +1,75 @@
+# K-Means Clustering using Pure Python
+
+# Student data
+# [Marks, Attendance]
+data = [
+[85, 90],
+[80, 88],
+[82, 91],
+[35, 50],
+[40, 55],
+[38, 52]
+]
+
+students = [&quot;S1&quot;, &quot;S2&quot;, &quot;S3&quot;, &quot;S4&quot;, &quot;S5&quot;, &quot;S6&quot;]
+
+# Initial centroids
+centroid1 = [85, 90]
+centroid2 = [35, 50]
+
+# Calculate Euclidean distance
+def distance(point, centroid):
+return ((point[0] - centroid[0]) ** 2 +
+(point[1] - centroid[1]) ** 2) ** 0.5
+
+# Repeat clustering
+for iteration in range(10):
+
+cluster1 = []
+cluster2 = []
+
+# Assign each student to nearest centroid
+for i in range(len(data)):
+
+d1 = distance(data[i], centroid1)
+d2 = distance(data[i], centroid2)
+
+if d1 &lt; d2:
+cluster1.append(i)
+else:
+cluster2.append(i)
+
+# Calculate new centroid 1
+if len(cluster1) &gt; 0:
+
+centroid1 = [
+sum(data[i][0] for i in cluster1) / len(cluster1),
+sum(data[i][1] for i in cluster1) / len(cluster1)
+]
+
+# Calculate new centroid 2
+if len(cluster2) &gt; 0:
+centroid2 = [
+sum(data[i][0] for i in cluster2) / len(cluster2),
+sum(data[i][1] for i in cluster2) / len(cluster2)
+]
+
+# Display results
+print(&quot;K-Means Clustering Results&quot;)
+print(&quot;--------------------------&quot;)
+
+print(&quot;\nCluster 1 Centroid:&quot;)
+print(&quot;Marks =&quot;, round(centroid1[0], 2))
+print(&quot;Attendance =&quot;, round(centroid1[1], 2))
+
+print(&quot;\nCluster 2 Centroid:&quot;)
+print(&quot;Marks =&quot;, round(centroid2[0], 2))
+print(&quot;Attendance =&quot;, round(centroid2[1], 2))
+
+print(&quot;\nStudent Cluster Assignments:&quot;)
+
+for i in cluster1:
+print(students[i], &quot;-&gt; Cluster 1&quot;)
+
+for i in cluster2:
+print(students[i], &quot;-&gt; Cluster 2&quot;)
