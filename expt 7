@@ -1,0 +1,64 @@
+import math
+import random
+# Sigmoid Activation Function
+def sigmoid(x):
+return 1 / (1 + math.exp(-x))
+# Derivative of Sigmoid
+def sigmoid_derivative(x):
+return x * (1 - x)
+# XOR Training Data
+X = [
+[0, 0],
+[0, 1],
+[1, 0],
+[1, 1]
+]
+Y = [
+[0],
+[1],
+[1],
+[0]
+]
+
+# Initialize Weights Randomly
+random.seed(42)
+w_input_hidden = [[random.uniform(-1, 1) for _ in range(2)] for _ in range(2)]
+w_hidden_output = [random.uniform(-1, 1) for _ in range(2)]
+learning_rate = 0.5
+epochs = 10000
+# Training
+for epoch in range(epochs):
+for i in range(len(X)):
+# Forward Pass
+h1 = sigmoid(X[i][0] * w_input_hidden[0][0] +
+X[i][1] * w_input_hidden[1][0])
+h2 = sigmoid(X[i][0] * w_input_hidden[0][1] +
+X[i][1] * w_input_hidden[1][1])
+output = sigmoid(h1 * w_hidden_output[0] +
+h2 * w_hidden_output[1])
+# Error
+error = Y[i][0] - output
+# Backpropagation
+d_output = error * sigmoid_derivative(output)
+d_h1 = d_output * w_hidden_output[0] * sigmoid_derivative(h1)
+d_h2 = d_output * w_hidden_output[1] * sigmoid_derivative(h2)
+# Update Hidden→Output Weights
+w_hidden_output[0] += learning_rate * d_output * h1
+w_hidden_output[1] += learning_rate * d_output * h2
+# Update Input→Hidden Weights
+
+w_input_hidden[0][0] += learning_rate * d_h1 * X[i][0]
+w_input_hidden[1][0] += learning_rate * d_h1 * X[i][1]
+w_input_hidden[0][1] += learning_rate * d_h2 * X[i][0]
+w_input_hidden[1][1] += learning_rate * d_h2 * X[i][1]
+# Testing
+print(&quot;Input\tExpected\tPredicted&quot;)
+for i in range(len(X)):
+h1 = sigmoid(X[i][0] * w_input_hidden[0][0] +
+X[i][1] * w_input_hidden[1][0])
+h2 = sigmoid(X[i][0] * w_input_hidden[0][1] +
+X[i][1] * w_input_hidden[1][1])
+output = sigmoid(h1 * w_hidden_output[0] +
+h2 * w_hidden_output[1])
+predicted = round(output)
+print(X[i], &quot;\t&quot;, Y[i][0], &quot;\t\t&quot;, predicted)
