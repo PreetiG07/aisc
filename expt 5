@@ -1,0 +1,456 @@
+# ============================================================
+# GENETIC ALGORITHM - ONE GENERATION ONLY
+# ============================================================
+
+POP_SIZE = 6
+CHROMOSOME_LENGTH = 5
+
+# ============================================================
+# VALIDATE CHROMOSOME
+# ============================================================
+
+def generate_chromosome(chromosome):
+
+chromosome = chromosome.strip()
+
+if len(chromosome) != CHROMOSOME_LENGTH:
+raise ValueError(
+&quot;Chromosome must contain exactly 5 bits.&quot;
+)
+
+if any(bit not in &#39;01&#39; for bit in chromosome):
+raise ValueError(
+&quot;Chromosome must contain only 0 and 1.&quot;
+)
+
+return chromosome
+
+# ============================================================
+# FITNESS FUNCTION
+# f(x) = x^2
+
+# ============================================================
+
+def evaluate_fitness(chromosome):
+
+decimal_x = int(chromosome, 2)
+
+return decimal_x * decimal_x
+
+# ============================================================
+# MUTATION FUNCTION
+# ============================================================
+
+def mutate_bit(chromosome, bit_position):
+
+gene_list = list(chromosome)
+
+index = bit_position - 1
+
+# Flip the selected bit
+if gene_list[index] == &#39;0&#39;:
+gene_list[index] = &#39;1&#39;
+else:
+gene_list[index] = &#39;0&#39;
+
+return &#39;&#39;.join(gene_list)
+
+# ============================================================
+# START
+# ============================================================
+
+print(&quot;======================================================&quot;)
+print(&quot; GENETIC ALGORITHM - ONE GENERATION&quot;)
+print(&quot;======================================================&quot;)
+
+# ============================================================
+# STEP 1: ENTER 6 CHROMOSOMES
+# ============================================================
+
+population = []
+
+print(&quot;\nEnter 6 chromosomes of 5 bits each.&quot;)
+
+for i in range(POP_SIZE):
+
+while True:
+
+try:
+
+chromosome = input(
+f&quot;Enter chromosome {i + 1}: &quot;
+)
+
+chromosome = generate_chromosome(chromosome)
+
+population.append(chromosome)
+
+break
+
+except ValueError as error:
+
+print(&quot;Error:&quot;, error)
+
+# ============================================================
+# STEP 2: CALCULATE FITNESS
+# ============================================================
+
+print(&quot;\n======================================================&quot;)
+print(&quot; INITIAL POPULATION&quot;)
+print(&quot;======================================================&quot;)
+
+for i, chromosome in enumerate(population):
+
+decimal_value = int(chromosome, 2)
+fitness = evaluate_fitness(chromosome)
+
+print(
+f&quot;{i + 1}. Chromosome = {chromosome} | &quot;
+f&quot;Decimal = {decimal_value} | &quot;
+f&quot;Fitness = {fitness}&quot;
+)
+
+# ============================================================
+# STEP 3: SELECT BEST TWO PARENTS
+# ============================================================
+
+population.sort(
+key=evaluate_fitness,
+reverse=True
+)
+
+parent_alpha = population[0]
+parent_beta = population[1]
+
+print(&quot;\n======================================================&quot;)
+print(&quot; SELECTED PARENTS&quot;)
+
+print(&quot;======================================================&quot;)
+
+print(
+f&quot;Parent 1 = {parent_alpha} | &quot;
+f&quot;Fitness = {evaluate_fitness(parent_alpha)}&quot;
+)
+
+print(
+f&quot;Parent 2 = {parent_beta} | &quot;
+f&quot;Fitness = {evaluate_fitness(parent_beta)}&quot;
+)
+
+# ============================================================
+# STEP 4: USER ENTERS CROSSOVER POINT
+# ============================================================
+
+print(&quot;\n======================================================&quot;)
+print(&quot; CROSSOVER&quot;)
+print(&quot;======================================================&quot;)
+
+print(&quot;Chromosome length = 5&quot;)
+print(&quot;Valid crossover points = 1, 2, 3, 4&quot;)
+
+while True:
+
+try:
+
+crossover_point = int(
+input(&quot;Enter crossover point: &quot;)
+)
+
+if crossover_point not in [1, 2, 3, 4]:
+
+print(&quot;Enter crossover point between 1 and 4.&quot;)
+
+continue
+
+break
+
+except ValueError:
+
+print(&quot;Enter a valid number.&quot;)
+
+# ============================================================
+# STEP 5: PERFORM CROSSOVER
+# ============================================================
+
+offspring_1 = (
+
+parent_alpha[:crossover_point]
++
+parent_beta[crossover_point:]
+)
+
+offspring_2 = (
+parent_beta[:crossover_point]
++
+parent_alpha[crossover_point:]
+)
+
+print(&quot;\nCrossover Point =&quot;, crossover_point)
+
+print(
+&quot;Offspring 1 before mutation =&quot;,
+offspring_1
+)
+
+print(
+&quot;Offspring 2 before mutation =&quot;,
+offspring_2
+)
+
+# ============================================================
+
+# STEP 6: USER CHOOSES MUTATION
+# ============================================================
+
+print(&quot;\n======================================================&quot;)
+print(&quot; MUTATION&quot;)
+print(&quot;======================================================&quot;)
+
+print(&quot;1. Mutate Offspring 1&quot;)
+print(&quot;2. Mutate Offspring 2&quot;)
+print(&quot;3. Mutate Both&quot;)
+print(&quot;4. No Mutation&quot;)
+
+while True:
+
+try:
+
+choice = int(
+input(&quot;Enter your choice: &quot;)
+)
+
+if choice not in [1, 2, 3, 4]:
+
+print(&quot;Enter 1, 2, 3 or 4.&quot;)
+
+continue
+
+break
+
+except ValueError:
+
+print(&quot;Enter a valid number.&quot;)
+
+# ============================================================
+# MUTATE OFFSPRING 1
+# ============================================================
+
+if choice == 1:
+
+while True:
+
+try:
+
+bit = int(
+input(
+&quot;Enter bit position for Offspring 1 (1-5): &quot;
+)
+)
+
+if bit &lt; 1 or bit &gt; 5:
+
+print(&quot;Bit position must be between 1 and 5.&quot;)
+
+continue
+
+break
+
+except ValueError:
+
+print(&quot;Enter a valid number.&quot;)
+
+offspring_1 = mutate_bit(
+offspring_1,
+bit
+)
+
+# ============================================================
+# MUTATE OFFSPRING 2
+# ============================================================
+
+elif choice == 2:
+
+while True:
+
+try:
+
+bit = int(
+input(
+&quot;Enter bit position for Offspring 2 (1-5): &quot;
+)
+)
+
+if bit &lt; 1 or bit &gt; 5:
+
+print(&quot;Bit position must be between 1 and 5.&quot;)
+
+continue
+
+break
+
+except ValueError:
+
+print(&quot;Enter a valid number.&quot;)
+
+offspring_2 = mutate_bit(
+offspring_2,
+bit
+)
+
+# ============================================================
+# MUTATE BOTH
+# ============================================================
+
+elif choice == 3:
+
+while True:
+
+try:
+
+bit1 = int(
+input(
+&quot;Enter bit position for Offspring 1 (1-5): &quot;
+)
+)
+
+if bit1 &lt; 1 or bit1 &gt; 5:
+
+print(&quot;Bit position must be between 1 and 5.&quot;)
+
+continue
+
+break
+
+except ValueError:
+
+print(&quot;Enter a valid number.&quot;)
+
+while True:
+
+try:
+
+bit2 = int(
+input(
+&quot;Enter bit position for Offspring 2 (1-5): &quot;
+)
+)
+
+if bit2 &lt; 1 or bit2 &gt; 5:
+
+print(&quot;Bit position must be between 1 and 5.&quot;)
+
+continue
+
+break
+
+except ValueError:
+
+print(&quot;Enter a valid number.&quot;)
+
+offspring_1 = mutate_bit(
+offspring_1,
+bit1
+)
+
+offspring_2 = mutate_bit(
+offspring_2,
+bit2
+)
+
+# ============================================================
+# NO MUTATION
+# ============================================================
+
+elif choice == 4:
+
+print(&quot;No mutation performed.&quot;)
+
+# ============================================================
+# STEP 7: FINAL OFFSPRING
+# ============================================================
+
+print(&quot;\n======================================================&quot;)
+print(&quot; FINAL OFFSPRING&quot;)
+print(&quot;======================================================&quot;)
+
+print(
+f&quot;Offspring 1 = {offspring_1} | &quot;
+f&quot;Decimal = {int(offspring_1, 2)} | &quot;
+f&quot;Fitness = {evaluate_fitness(offspring_1)}&quot;
+)
+
+print(
+f&quot;Offspring 2 = {offspring_2} | &quot;
+f&quot;Decimal = {int(offspring_2, 2)} | &quot;
+f&quot;Fitness = {evaluate_fitness(offspring_2)}&quot;
+)
+
+# ============================================================
+# STEP 8: FINAL POPULATION
+# Replace two worst chromosomes
+# ============================================================
+
+population[-1] = offspring_1
+population[-2] = offspring_2
+
+# ============================================================
+# STEP 9: FINAL RESULT
+# ============================================================
+
+population.sort(
+key=evaluate_fitness,
+reverse=True
+)
+
+best_chromosome = population[0]
+
+best_decimal = int(
+best_chromosome,
+2
+)
+
+best_fitness = evaluate_fitness(
+best_chromosome
+)
+
+# ============================================================
+# FINAL POPULATION
+# ============================================================
+
+print(&quot;\n======================================================&quot;)
+print(&quot; FINAL POPULATION&quot;)
+print(&quot;======================================================&quot;)
+
+for i, chromosome in enumerate(population):
+
+print(
+f&quot;{i + 1}. Chromosome = {chromosome} | &quot;
+f&quot;Decimal = {int(chromosome, 2)} | &quot;
+f&quot;Fitness = {evaluate_fitness(chromosome)}&quot;
+)
+
+# ============================================================
+# BEST ANSWER
+# ============================================================
+
+print(&quot;\n======================================================&quot;)
+print(&quot; FINAL BEST RESULT&quot;)
+print(&quot;======================================================&quot;)
+
+print(
+&quot;Best Chromosome :&quot;,
+best_chromosome
+
+)
+
+print(
+&quot;Decimal Value :&quot;,
+best_decimal
+)
+
+print(
+&quot;Maximum Fitness :&quot;,
+best_fitness
+)
+
+print(&quot;======================================================&quot;)
