@@ -1,0 +1,37 @@
+import numpy as np
+# Training dataset matrices representing the analytical AND truth gate boundaries
+X = np.array([
+[0, 0],
+[0, 1],
+[1, 0],
+[1, 1]
+])
+T = np.array([0, 0, 0, 1])
+# Structural weights initialization vector arrays and scalar bias factors
+w = np.zeros(2)
+b = 0
+learning_rate = 1
+# Training loop iterations over epochs
+for epoch in range(10):
+for i in range(len(X)):
+net = np.dot(X[i], w) + b
+if net &gt;= 0:
+y = 1
+
+else:
+y = 0
+error = T[i] - y
+# Apply standard Perceptron Learning adjustments
+w = w + learning_rate * error * X[i]
+b = b + learning_rate * error
+print(&quot;Weights =&quot;, w)
+print(&quot;Bias =&quot;, b)
+# Verification / Testing Phase
+print(&quot;\nTesting Model Results:&quot;)
+for x in X:
+net = np.dot(x, w) + b
+if net &gt;= 0:
+y = 1
+else:
+y = 0
+print(x, &quot;Output Vector =&quot;, y)
